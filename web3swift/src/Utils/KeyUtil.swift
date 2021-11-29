@@ -154,4 +154,21 @@ public class KeyUtil {
         }
         return "0x\(rv[1...].web3.keccak256.web3.hexString.suffix(40))"
     }
+    
+    /// Hashes a personal message by first padding it with the "\u{19}Ethereum Signed Message:\n" string and message length string.
+    /// See: https://github.com/ethereum/go-ethereum/pull/2940
+    public static func recoverPublicKeyFromWeb3(message: Data, signature: Data) throws -> String {
+        var prefix = "\u{0019}Ethereum Signed Message:\n"
+        prefix += String(message.count)
+        guard let prefixData = prefix.data(using: .ascii) else { throw KeyUtilError.signatureParseFailure }
+        var data = Data()
+        if message.count >= prefixData.count && prefixData == message[0 ..< prefixData.count] {
+            data.append(message)
+        } else {
+            data.append(prefixData)
+            data.append(message)
+        }
+        let hash = data.web3.keccak256
+        return try KeyUtil.recoverPublicKey(message: hash, signature: signature )
+    }
 }
