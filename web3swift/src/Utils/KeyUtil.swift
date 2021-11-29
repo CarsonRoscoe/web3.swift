@@ -18,7 +18,7 @@ enum KeyUtilError: Error {
     case badArguments
 }
 
-class KeyUtil {
+public class KeyUtil {
     static func generatePrivateKeyData() -> Data? {
         return Data.randomOfLength(32)
     }
