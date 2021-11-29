@@ -107,7 +107,7 @@ public class KeyUtil {
         return signature
     }
 
-    static func recoverPublicKey(message: Data, signature: Data) throws -> String {
+    public static func recoverPublicKey(message: Data, signature: Data) throws -> String {
         if signature.count != 65 || message.count != 32 {
             throw KeyUtilError.badArguments
         }
